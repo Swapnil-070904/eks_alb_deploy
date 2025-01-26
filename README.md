@@ -31,12 +31,14 @@ Step 3: Associate IAM OIDC Provider
 Ensure your EKS cluster is associated with an IAM OIDC provider. This is required for IAM roles to be assumed by the Kubernetes service account.
 
 ```bash
-eksctl utils associate-iam-oidc-provider --cluster <cluster-name> --approve ```
+eksctl utils associate-iam-oidc-provider --cluster <cluster-name> --approve
+```
 Step 4: Apply Deployment Configuration
 Now, apply the deployment configuration to your cluster.
 
 ```bash
-kubectl apply -f deploy.yaml ```
+kubectl apply -f deploy.yaml
+```
 Step 5: Create IAM Policy for Load Balancer Controller
 Create the IAM policy for AWS Load Balancer Controller. This policy grants necessary permissions to manage ALBs.
 
@@ -84,4 +86,4 @@ After deploying your application and configuring the load balancer, access your 
 Additional Notes
 Replace all <placeholders> with actual values like <cluster-name>, <region>, and <your-vpc-id>.
 Ensure that your policy.json file is properly configured with the necessary permissions for managing ALBs.
-If you need to configure an ingress resource, you can define it in the ingress.yaml file.
+If you need to configure an ingress resource, you can define it in the deploy.yaml->ingress file.
