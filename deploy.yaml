@@ -1,0 +1,62 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: spsGame
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deploy-spsGame
+  namespace: spsGame
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: spsGame-container
+  template:
+    metadata:
+      labels:
+        app: spsGame-container
+    spec:
+      containers:
+      - name: spsGame-container
+        image: ak6805002/spsgame:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
+---
+apiVersion: v1
+kind : Service
+metadata:
+  name: service-spsGame
+  namespace: spsGame
+spec: 
+  selector:
+    app: spsGame-container
+  ports:
+    - protocol: TCP
+      port: 80
+      targatePort: 80
+  type: NodePort
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-spsGame
+  namespace: spsGame
+  annotations:
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+spec:
+  ingressClassName: alb
+  rules:
+    -http:
+      paths:
+      - path: /*
+        pathType: Prefix
+        backend:
+          service:
+            name: service-spsGame
+            port:
+              number: 80
